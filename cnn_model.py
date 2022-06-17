@@ -161,7 +161,7 @@ for epoch in range(num_epochs):
 
     # Save the best model
     if test_accuracy > best_accuracy:
-        torch.save(model.state_dict(), 'best_checkpoint1.model')
+        torch.save(model.state_dict(), 'best_checkpoint2.model')
         best_accuracy = test_accuracy
 
 plt.figure(figsize=(10,5))
@@ -171,5 +171,5 @@ plt.plot(train_acc,label="train")
 plt.xlabel("Iterations")
 plt.ylabel("Accuracy")
 plt.legend()
-plt.savefig('train_val_acc2.png')
+plt.savefig('graph.png')
 plt.show()
