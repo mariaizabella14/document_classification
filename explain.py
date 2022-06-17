@@ -3,12 +3,10 @@ from PIL import Image
 import torch.nn as nn
 import numpy as np
 import os, json
-
 import torch
 from torchvision import models, transforms
 from torch.autograd import Variable
 import torch.nn.functional as F
-
 from lime import lime_image
 from skimage.segmentation import mark_boundaries
 
@@ -19,7 +17,7 @@ def get_image(path):
             return img.convert('RGB')
 
 
-img = get_image('dataset/pred/509130720+-0721.jpg')
+img = get_image('dataset/pred/50396016-6017.jpg')
 plt.imshow(img)
 plt.show()
 
@@ -114,7 +112,6 @@ preprocess_transform = get_preprocess_transform()
 def batch_predict(images):
     model.eval()
     batch = torch.stack(tuple(preprocess_transform(i) for i in images), dim=0)
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     batch = batch.to(device)
@@ -132,7 +129,7 @@ explanation = explainer.explain_instance(np.array(pill_transf(img)),
                                          batch_predict, # classification function
                                          top_labels=5,
                                          hide_color=0,
-                                         num_samples=184) # number of images that will be sent to classification function
+                                         num_samples=1000) # number of images that will be sent to classification function
 
 temp, mask = explanation.get_image_and_mask(explanation.top_labels[0], positive_only=True, num_features=5, hide_rest=False)
 img_boundry1 = mark_boundaries(temp/255.0, mask)

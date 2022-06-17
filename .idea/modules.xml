@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../doc_class/.idea/doc_class.iml" filepath="$PROJECT_DIR$/../doc_class/.idea/doc_class.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../document_classification2/.idea/document_classification.iml" filepath="$PROJECT_DIR$/../document_classification2/.idea/document_classification.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pythonProject.iml" filepath="$PROJECT_DIR$/.idea/pythonProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pythonProject2/.idea/pythonProject2.iml" filepath="$PROJECT_DIR$/../pythonProject2/.idea/pythonProject2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../split/.idea/split.iml" filepath="$PROJECT_DIR$/../split/.idea/split.iml" />
+    </modules>
+  </component>
+</project>
