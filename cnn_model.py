@@ -13,20 +13,18 @@ import torchvision
 import pathlib
 
 
-#checking for device
+#checking if cuda is available
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
 
 transformer = transforms.Compose([
     transforms.Resize((250,250)),
-    #transforms.RandomHorizontalFlip(),
     transforms.ToTensor(),
     transforms.Grayscale(num_output_channels=1),
     transforms.Normalize([0.5], [0.5])
 ])
 
-#Dataloader
-#Path for training and testing directory
+#Giving the path for training and testing datasets
 train_path = 'dataset/train'
 test_path = 'dataset/test'
 
@@ -39,11 +37,12 @@ test_loader = DataLoader(
     batch_size=64, shuffle=True
 )
 
+#giving path and listing subdirectories(classes)
 root = pathlib.Path(train_path)
-classes = sorted([j.name.split('/')[-1] for j in root.iterdir()])   #listing subdirectories
+classes = sorted([j.name.split('/')[-1] for j in root.iterdir()])
 print(classes)
 
-
+#printing shape
 dataset = ImageFolder(train_path, transform=transformer)
 img, label = dataset[0]
 print(img.shape, label)
@@ -52,13 +51,6 @@ print(img.shape, label)
 class ConvNet(nn.Module):
     def __init__(self, num_classes=10):
         super(ConvNet, self).__init__()
-
-        # Output size after convolution filter
-        # ((w-f+2P)/s) +1
-        # 𝑊 = input volume
-        # 𝑃 = padding
-        # 𝐹 = filtersize
-        # 𝑆 = stride
 
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=20, kernel_size=7, stride=1, padding=1)
         self.bn1 = nn.BatchNorm2d(num_features=20)
@@ -73,20 +65,18 @@ class ConvNet(nn.Module):
         self.fc1 = nn.Linear(in_features=14 * 14 * 50, out_features=84)
         self.fc2 = nn.Linear(in_features=84, out_features=num_classes)
 
-        # Feed forwad function
 
     def forward(self, input):
         output = self.conv1(input)
         output = self.bn1(output)
         output = self.relu1(output)
-
         output = self.pool(output)
 
         output = self.conv2(output)
         output = self.bn2(output)
         output = self.relu2(output)
-
         output = self.pool(output)
+
         #print(output.shape)
         output = output.view(-1, 50 * 14 * 14)
         output = self.fc1(output)
@@ -96,19 +86,17 @@ class ConvNet(nn.Module):
 
 
 
-
 model = ConvNet(num_classes=10).to(device)
 optimizer = Adam(model.parameters(), lr=0.0001, weight_decay=0.1)
-#optimizer = Adam(model.parameters(), lr=0.001, weight_decay=0.0001)
 loss_function = nn.CrossEntropyLoss()
 
-num_epochs = 20
+num_epochs = 25
 train_count = len(glob.glob(train_path+'/**/*.jpg'))
 test_count = len(glob.glob(test_path+'/**/*.jpg'))
 print(train_count, test_count)
 
-# Model training and saving best model
 
+# Training the model and saving the best model
 best_accuracy = 0.0
 val_acc = []
 train_acc = []
@@ -159,11 +147,12 @@ for epoch in range(num_epochs):
     print('Epoch: ' + str(epoch) + ' Train Loss: ' + str(train_loss) + ' Train Accuracy: ' + str(
         train_accuracy) + ' Test Accuracy: ' + str(test_accuracy))
 
-    # Save the best model
+    # Saving the best model
     if test_accuracy > best_accuracy:
         torch.save(model.state_dict(), 'best_checkpoint1.model')
         best_accuracy = test_accuracy
 
+#Printing the validation and accuracy graph
 plt.figure(figsize=(10,5))
 plt.title("Training and Validation Accuracy")
 plt.plot(val_acc,label="val")
